@@ -1,4 +1,22 @@
-tasks = []
+import json
+import os
+
+FILE = "tasks.json"
+
+
+def load_tasks():
+    if os.path.exists(FILE):
+        with open(FILE, "r") as file:
+            return json.load(file)
+    return []
+
+
+def save_tasks():
+    with open(FILE, "w") as file:
+        json.dump(tasks, file, indent=4)
+
+
+tasks = load_tasks()
 
 while True:
     print("\n===== TO-DO LIST =====")
@@ -13,7 +31,8 @@ while True:
     if choice == "1":
         task = input("Enter your task: ")
         tasks.append({"task": task, "done": False})
-        print("✅ Task added!")
+        save_tasks()
+        print("✅ Task added and saved!")
 
     elif choice == "2":
         if not tasks:
@@ -32,7 +51,8 @@ while True:
 
             if 1 <= number <= len(tasks):
                 tasks[number - 1]["done"] = True
-                print("🎉 Task completed!")
+                save_tasks()
+                print("🎉 Task completed and saved!")
             else:
                 print("❌ Invalid task number.")
 
@@ -44,6 +64,7 @@ while True:
 
             if 1 <= number <= len(tasks):
                 deleted = tasks.pop(number - 1)
+                save_tasks()
                 print(f"🗑️ Deleted: {deleted['task']}")
             else:
                 print("❌ Invalid task number.")
